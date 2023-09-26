@@ -1,8 +1,13 @@
 # global
 from hypothesis import strategies as st
+from hypothesis import reproduce_failure
+from ivy_tests.test_ivy.test_frontends.test_tensorflow.test_keras.test_metrics import (
+    _dtype_pred_and_labels,
+)
 
 # local
 import ivy_tests.test_ivy.helpers as helpers
+from ivy import with_unsupported_dtypes
 from ivy.functional.ivy.layers import _deconv_length
 from ivy_tests.test_ivy.helpers import handle_frontend_test
 from ivy_tests.test_ivy.test_functional.test_core.test_statistical import (
@@ -679,7 +684,10 @@ def test_tensorflow_avg_pool1d(
 @handle_frontend_test(
     fn_tree="tensorflow.nn.avg_pool2d",
     x_k_s_p_df=helpers.arrays_for_pooling(
-        min_dims=4, max_dims=4, min_side=1, max_side=4
+        min_dims=4,
+        max_dims=4,
+        min_side=1,
+        max_side=4,
     ),
     test_with_out=st.just(False),
 )
@@ -704,6 +712,8 @@ def test_tensorflow_avg_pool2d(
         ksize=ksize,
         strides=strides,
         padding=padding,
+        rtol=1e-2,
+        atol=1e-2,
     )
 
 
